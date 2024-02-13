@@ -1,5 +1,6 @@
 import sqlite3
 import telebot
+from telebot import types
 
 bot = telebot.TeleBot('6956163861:AAHiedP7PYOWS-QHeLSqyhGtJsm5aSkFrE8')
 
@@ -166,10 +167,46 @@ def list_of_requests(message):
     pass
 
 
+def get_user_services(user_id):
+    conn = sqlite3.connect('your_database.db')  # Replace 'your_database.db' with your database file
+    c = conn.cursor()
+    c.execute("SELECT * FROM services WHERE user_id=?", (user_id,))
+    services = c.fetchall()
+    conn.close()
+    return services
+
+
+# Define the handler for the /services command
 @bot.message_handler(commands=['services'])
 def list_of_services(message):
-    # TODO: list of his services for the user | add buttons with edit service, delete service
-    pass
+    # Get user ID
+    user_id = message.from_user.id
+
+    # Fetch user's services from the database
+    services = get_user_services(user_id)
+
+    if not services:
+        bot.reply_to(message, "You don't have any services yet.")
+        return
+
+    # Create a keyboard markup
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+
+    # Iterate over each service and add it to the message with buttons
+    for service in services:
+        service_name = service[1]
+        edit_button = types.KeyboardButton(f"Edit {service_name}")
+        delete_button = types.KeyboardButton(f"Delete {service_name}")
+        markup.add(edit_button, delete_button)
+
+        # You can customize the service message as per your requirements
+        service_message = f"Service Name: {service_name}\n" \
+                          f"Service Description: {service[2]}\n" \
+                          f"Service Price: {service[3]}\n" \
+                          f"Service Location: {service[4]}\n"
+
+        # Send the service message with buttons
+        bot.send_message(message.chat.id, service_message, reply_markup=markup)
 
 
 if __name__ == "__main__":
