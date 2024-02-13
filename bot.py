@@ -6,28 +6,34 @@ bot = telebot.TeleBot('6956163861:AAHiedP7PYOWS-QHeLSqyhGtJsm5aSkFrE8')
 
 user_data = {}
 
-# conn = sqlite3.connect('users.sqlite3', check_same_thread=False)
-# cursor = conn.cursor()
-# cursor.execute('''CREATE TABLE IF NOT EXISTS workers (
-#                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-#                     user_id INTEGER,
-#                     user_name TEXT,
-#                     birthday TEXT,
-#                     passport TEXT,
-#                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-#                 )''')
+conn = sqlite3.connect('users.db', check_same_thread=False)
+cursor = conn.cursor()
+cursor.execute('''CREATE TABLE IF NOT EXISTS workers (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    user_name TEXT,
+                    birthday TEXT,
+                    passport_number_and_series TEXT,
+                    given_date TEXT,
+                    born_date TEXT,
+                    born_place TEXT,
+                    sex TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )''')
 
-# cursor.execute('''CREATE TABLE workers (
-#                     id INTEGER PRIMARY KEY,
-#                     user_id INTEGER,
-#                     user_name TEXT,
-#                     birthday TEXT,
-#                     passport_number_and_series TEXT,
-#                     born_date TEXT,
-#                     born_place TEXT,
-#                     sex TEXT,
-#                     given_date TEXT
-# );''')
+
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS passport (
+        id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        born_date TEXT NOT NULL,
+        born_place TEXT NOT NULL,
+        sex TEXT NOT NULL,
+        passport_number_and_series TEXT NOT NULL,
+        given_date TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES workers (id)
+    )
+''')
 
 
 @bot.message_handler(commands=['start'])
@@ -35,23 +41,22 @@ def handle_worker_info(message):
     user_id = message.from_user.id
     user_name = message.text
 
-    # Save user information to the database
-    # cursor.execute("INSERT INTO workers (user_id, user_name) VALUES (?, ?)", (user_id, user_name))
-    # conn.commit()
+    # Save user information to the user_data dictionary
+    user_data[user_id] = {"user_name": user_name}
 
-    bot.send_message(user_id, "Теперь введите ваше имя, фамилия, отчество.. ")
+    bot.send_message(user_id, "Теперь введите вашу дату рождения (дд.мм.гггг):")
     bot.register_next_step_handler(message, handle_worker_birthday)
+
 
 
 def handle_worker_birthday(message):
     user_id = message.from_user.id
     user_birthday = message.text
 
-    # Save user birthday to the database
-    # cursor.execute("UPDATE workers SET birthday=? WHERE user_id=?", (user_birthday, user_id))
-    # conn.commit()
+    # Add user birthday to the user_data dictionary
+    user_data[user_id]["birthday"] = user_birthday
 
-    bot.send_message(user_id, "Теперь введите ваши паспортные данные (серия и номер).. ")
+    bot.send_message(user_id, "Теперь введите ваши паспортные данные (серия и номер):")
     bot.register_next_step_handler(message, handle_worker_passport)
 
 
@@ -59,53 +64,55 @@ def handle_worker_passport(message):
     user_id = message.from_user.id
     user_passport = message.text
 
-    bot.send_message(user_id, "Теперь введите дату выдачи паспорта (дд.мм.гггг).. ")
-    bot.register_next_step_handler(message, lambda msg: handle_worker_passport_given_date(msg, user_passport))
+    # Add user passport to the user_data dictionary
+    user_data[user_id]["passport"] = user_passport
+
+    bot.send_message(user_id, "Теперь введите дату выдачи паспорта (дд.мм.гггг):")
+    bot.register_next_step_handler(message, handle_worker_passport_given_date)
 
 
-def handle_worker_passport_given_date(message, user_passport):
+def handle_worker_passport_given_date(message):
     user_id = message.from_user.id
     given_date = message.text
 
-    bot.send_message(user_id, "Теперь введите дату рождения (дд.мм.гггг).. ")
-    bot.register_next_step_handler(message,
-                                   lambda msg: handle_worker_passport_born_date(msg, user_passport, given_date))
+    bot.send_message(user_id, "Теперь введите дату рождения (дд.мм.гггг):")
+    bot.register_next_step_handler(message, lambda msg: handle_worker_passport_born_date(msg, given_date))
 
 
-def handle_worker_passport_born_date(message, user_passport, given_date):
+def handle_worker_passport_born_date(message, given_date):
     user_id = message.from_user.id
     born_date = message.text
 
-    bot.send_message(user_id, "Теперь введите место рождения.. ")
-    bot.register_next_step_handler(message,
-                                   lambda msg: handle_worker_passport_born_place(msg, user_passport, given_date,
-                                                                                 born_date))
+    bot.send_message(user_id, "Теперь введите место рождения:")
+    bot.register_next_step_handler(message, lambda msg: handle_worker_passport_born_place(msg, given_date, born_date))
 
 
-def handle_worker_passport_born_place(message, user_passport, given_date, born_date):
+def handle_worker_passport_born_place(message, given_date, born_date):
     user_id = message.from_user.id
     born_place = message.text
 
-    bot.send_message(user_id, "Теперь введите пол (мужской/женский).. ")
-    bot.register_next_step_handler(message,
-                                   lambda msg: handle_worker_passport_sex(msg, user_passport, given_date, born_date,
-                                                                          born_place))
+    bot.send_message(user_id, "Теперь введите пол (мужской/женский):")
+    bot.register_next_step_handler(message, lambda msg: handle_worker_passport_sex(msg, given_date, born_date, born_place))
 
 
-def handle_worker_passport_sex(message, user_passport, given_date, born_date, born_place):
+def handle_worker_passport_sex(message, given_date, born_date, born_place):
     user_id = message.from_user.id
     sex = message.text
 
-    # Save user passport information to the database
-    # cursor.execute(
-    #     "UPDATE workers SET passport_number_and_series=?, given_date=?, born_date=?, born_place=?, sex=? WHERE user_id=?",
-    #     (user_passport, given_date, born_date, born_place, sex, user_id))
-    # conn.commit()
+    # Retrieve user information from the user_data dictionary
+    user_info = user_data[user_id]
+    user_name = user_info["user_name"]
+    user_birthday = user_info["birthday"]
+    user_passport = user_info["passport"]
+
+    # Save user information to the database
+    cursor.execute("INSERT INTO workers (user_id, user_name, birthday, passport_number_and_series, given_date, born_date, born_place, sex) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                   (user_id, user_name, user_birthday, user_passport, given_date, born_date, born_place, sex))
+    conn.commit()
 
     bot.send_message(user_id, "Паспортные данные успешно сохранены!")
 
-    bot.send_message(user_id,
-                     "Отлично! Теперь вы можете использовать команду /services для просмотра доступных действий.")
+    bot.send_message(user_id, "Отлично! Теперь вы можете использовать команду /services для просмотра доступных действий.")
 
 
 @bot.message_handler(commands=['services'])
@@ -143,11 +150,11 @@ def get_service_location(message):
     user_id = message.from_user.id
     user_data[user_id]["service_location"] = service_location
 
-    # cursor.execute(
-    #     "INSERT INTO services (user_id, service_name, service_description, service_price, service_location) VALUES (?, ?, ?, ?, ?)",
-    #     (user_id, user_data[user_id]["service_name"], user_data[user_id]["service_description"],
-    #      user_data[user_id]["service_price"], user_data[user_id]["service_location"]))
-    # conn.commit()
+    cursor.execute(
+        "INSERT INTO services (user_id, service_name, service_description, service_price, service_location) VALUES (?, ?, ?, ?, ?)",
+        (user_id, user_data[user_id]["service_name"], user_data[user_id]["service_description"],
+         user_data[user_id]["service_price"], user_data[user_id]["service_location"]))
+    conn.commit()
 
     bot.send_message(user_id, "Service added successfully!")
 
