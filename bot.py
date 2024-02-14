@@ -21,7 +21,14 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS workers (
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )''')
 
-
+cursor.execute('''CREATE TABLE IF NOT EXISTS services (
+                    user_id INTEGER,
+                    service_name TEXT,
+                    service_description TEXT,
+                    service_price REAL,
+                    service_location TEXT
+                )''')
+""" sqlite passport creation code
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS passport (
         id INTEGER PRIMARY KEY,
@@ -34,8 +41,7 @@ cursor.execute('''
         FOREIGN KEY (user_id) REFERENCES workers (id)
     )
 ''')
-
-
+"""
 @bot.message_handler(commands=['start'])
 def handle_worker_info(message):
     user_id = message.from_user.id
