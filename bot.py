@@ -21,7 +21,14 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS workers (
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )''')
 
-
+cursor.execute('''CREATE TABLE IF NOT EXISTS services (
+                    user_id INTEGER,
+                    service_name TEXT,
+                    service_description TEXT,
+                    service_price REAL,
+                    service_location TEXT
+                )''')
+""" sqlite passport creation code
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS passport (
         id INTEGER PRIMARY KEY,
@@ -34,18 +41,23 @@ cursor.execute('''
         FOREIGN KEY (user_id) REFERENCES workers (id)
     )
 ''')
+"""
 
 
 @bot.message_handler(commands=['start'])
 def handle_worker_info(message):
     user_id = message.from_user.id
     user_name = message.text
+    cursor.execute("SELECT * FROM workers WHERE user_id=?", (user_id,))
+    existing_user = cursor.fetchone()
+    if existing_user:
+        print("User exists")
+        # TODO: Hello message to user | adding markups
+    else:
+        user_data[user_id] = {"user_name": user_name}
 
-    # Save user information to the user_data dictionary
-    user_data[user_id] = {"user_name": user_name}
-
-    bot.send_message(user_id, "Теперь введите вашу дату рождения (дд.мм.гггг):")
-    bot.register_next_step_handler(message, handle_worker_birthday)
+        bot.send_message(user_id, "Теперь введите вашу дату рождения (дд.мм.гггг):")
+        bot.register_next_step_handler(message, handle_worker_birthday)
 
 
 
@@ -53,7 +65,6 @@ def handle_worker_birthday(message):
     user_id = message.from_user.id
     user_birthday = message.text
 
-    # Add user birthday to the user_data dictionary
     user_data[user_id]["birthday"] = user_birthday
 
     bot.send_message(user_id, "Теперь введите ваши паспортные данные (серия и номер):")
@@ -64,7 +75,6 @@ def handle_worker_passport(message):
     user_id = message.from_user.id
     user_passport = message.text
 
-    # Add user passport to the user_data dictionary
     user_data[user_id]["passport"] = user_passport
 
     bot.send_message(user_id, "Теперь введите дату выдачи паспорта (дд.мм.гггг):")
@@ -99,13 +109,11 @@ def handle_worker_passport_sex(message, given_date, born_date, born_place):
     user_id = message.from_user.id
     sex = message.text
 
-    # Retrieve user information from the user_data dictionary
     user_info = user_data[user_id]
     user_name = user_info["user_name"]
     user_birthday = user_info["birthday"]
     user_passport = user_info["passport"]
 
-    # Save user information to the database
     cursor.execute("INSERT INTO workers (user_id, user_name, birthday, passport_number_and_series, given_date, born_date, born_place, sex) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                    (user_id, user_name, user_birthday, user_passport, given_date, born_date, born_place, sex))
     conn.commit()
@@ -155,7 +163,7 @@ def get_service_location(message):
         (user_id, user_data[user_id]["service_name"], user_data[user_id]["service_description"],
          user_data[user_id]["service_price"], user_data[user_id]["service_location"]))
     conn.commit()
-
+    # TODO: Send job to Channel (with button)
     bot.send_message(user_id, "Service added successfully!")
 
 
