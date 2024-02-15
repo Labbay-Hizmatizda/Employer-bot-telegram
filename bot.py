@@ -52,7 +52,7 @@ def handle_worker_info(message):
     existing_user = cursor.fetchone()
     if existing_user:
         print("User exists")
-        # TODO: Hello message to user
+        # TODO: Hello message to user | adding markups
     else:
         user_data[user_id] = {"user_name": user_name}
 
@@ -163,7 +163,7 @@ def get_service_location(message):
         (user_id, user_data[user_id]["service_name"], user_data[user_id]["service_description"],
          user_data[user_id]["service_price"], user_data[user_id]["service_location"]))
     conn.commit()
-
+    # TODO: Send job to Channel (with button)
     bot.send_message(user_id, "Service added successfully!")
 
 
