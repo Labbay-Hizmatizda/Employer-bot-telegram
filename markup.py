@@ -1,0 +1,51 @@
+from telebot import types
+
+
+def russian():
+    markup = types.InlineKeyboardMarkup()
+
+    about_us = types.InlineKeyboardButton('О нас', callback_data='about_us')
+    my_account = types.InlineKeyboardButton('Мои Данные', callback_data='my_info')
+    orders = types.InlineKeyboardButton('Заказы', callback_data='orders')
+    
+    markup.add(about_us, my_account, orders)
+    return markup
+
+def uzbek():
+    markup = types.InlineKeyboardMarkup()
+
+    about_us = types.InlineKeyboardButton('Biz Haqimizda', callback_data='about_us')
+    my_account = types.InlineKeyboardButton('Mening danniylarim', callback_data='my_info')
+    orders = types.InlineKeyboardButton('Buyurtlamarim', callback_data='orders')
+    
+    markup.add(about_us, my_account, orders)
+    return markup
+
+ 
+def my_account_rus():
+    markup = types.InlineKeyboardMarkup()
+
+    change_phone_number = types.InlineKeyboardButton('Изменить номер', callback_data='change_number')
+    change_password = types.InlineKeyboardButton('Изменить пароль от акаунта', callback_data='change_psw')
+    back = types.InlineKeyboardButton('◀ Назад', callback_data='back')
+    markup.add(change_phone_number, change_password, back)
+    return markup
+    
+def orders_rus():
+    markup = types.InlineKeyboardMarkup()
+
+    active_orders = types.InlineKeyboardButton('Активные заказы', callback_data='active_orders')
+    new_order = types.InlineKeyboardButton('Создать новый заказ', callback_data='new_order')
+    back = types.InlineKeyboardButton('◀ Назад', callback_data='back')
+    markup.add(active_orders, new_order, back)
+
+    return markup
+
+def active_orders_rus():
+    pass
+    
+
+
+
+
+# _ = types.InlineKeyboardButton('', callback_data='')
