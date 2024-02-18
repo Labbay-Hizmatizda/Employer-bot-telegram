@@ -31,15 +31,17 @@ def callback_query(call):
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="У нас есть охуенный сайт хотите посетить ?\n pornhub.com")
 
 #---Мои данные 
-    elif call.data == 'my_info':
+    elif call.data == 'my_info_rus':
         markup = my_account_rus()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
 
 #---Заказы 
-    elif call.data == 'orders':
+    elif call.data == 'orders_rus':
         markup = orders_rus()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
-
+    
+    elif call.data == '':
+        pass
             
     
             
