@@ -6,7 +6,7 @@ bot = telebot.TeleBot('6956163861:AAHiedP7PYOWS-QHeLSqyhGtJsm5aSkFrE8')
 
 user_data = {}
 
-conn = sqlite3.connect('.sqlite3', check_same_thread=False)
+conn = sqlite3.connect('db.sqlite3', check_same_thread=False)
 cursor = conn.cursor()
 cursor.execute('''CREATE TABLE IF NOT EXISTS workers (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
