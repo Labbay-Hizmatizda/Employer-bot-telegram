@@ -130,7 +130,7 @@ def get_service_location(message):
 
 def new_request(pk, message):
     # TODO: identify the user by pk and get the message to request from him | add buttons with accept request,
-    #  ignore request, deny request, send him a message about, does his request denied or accepted, do not inform him
+    #  ignore request, deny req uest, send him a message about, does his request denied or accepted, do not inform him
     #  if it was ignored
     pass
 

@@ -5,18 +5,8 @@ def russian():
     markup = types.InlineKeyboardMarkup()
 
     about_us = types.InlineKeyboardButton('О нас', callback_data='about_us_rus')
-    my_account = types.InlineKeyboardButton('Мои Данные', callback_data='my_info_rus')
+    my_account = types.InlineKeyboardButton('Мои Данные', callback_data='my_account_rus')
     orders = types.InlineKeyboardButton('Заказы', callback_data='orders_rus')
-    
-    markup.add(about_us, my_account, orders)
-    return markup
-
-def uzbek():
-    markup = types.InlineKeyboardMarkup()
-
-    about_us = types.InlineKeyboardButton('Biz Haqimizda', callback_data='about_us_uz')
-    my_account = types.InlineKeyboardButton('Mening danniylarim', callback_data='my_info_uz')
-    orders = types.InlineKeyboardButton('Buyurtlamarim', callback_data='orders_uz')
     
     markup.add(about_us, my_account, orders)
     return markup
@@ -41,11 +31,20 @@ def orders_rus():
 
     return markup
 
+
 def active_orders_rus():
     pass
+
     
+def uzbek():
+    markup = types.InlineKeyboardMarkup()
+
+    about_us = types.InlineKeyboardButton('Biz Haqimizda', callback_data='about_us_uz')
+    my_account = types.InlineKeyboardButton('Mening danniylarim', callback_data='my_info_uz')
+    orders = types.InlineKeyboardButton('Buyurtlamarim', callback_data='orders_uz')
+    
+    markup.add(about_us, my_account, orders)
+    return markup
 
 
 
-
-# _ = types.InlineKeyboardButton('', callback_data='')

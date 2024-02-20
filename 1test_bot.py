@@ -21,31 +21,47 @@ def callback_query(call):
     if call.data == 'lang_rus':
         markup = russian()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text='Привет, {0}!'.format(call.from_user.first_name), reply_markup=markup)
-
-    elif call.data == 'lang_uz':
-        markup = uzbek()
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='Salom, {0}!'.format(call.from_user.first_name), reply_markup=markup)
-
-#---О нас
     elif call.data == 'about_us':
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="У нас есть охуенный сайт хотите посетить ?\n pornhub.com")
 
-#---Мои данные 
-    elif call.data == 'my_info_rus':
+
+        '''
+            -Мои данные
+                -Изменить номер
+                -Изменить пароль от аккаунта 
+                -Назад
+        '''
+    elif call.data == 'my_account_rus':
         markup = my_account_rus()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
+    elif call.data == 'change_number':
+        ...
+    elif call.data == 'back':
+        markup = russian()
+        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций:", reply_markup=markup)
 
-#---Заказы 
+
+
+        '''
+            -Заказы
+                -активные заказы
+                -новые заказы
+                -назад
+        '''
     elif call.data == 'orders_rus':
         markup = orders_rus()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
-    
-    elif call.data == '':
+    elif call.data == 'active_orders':
+        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
+    elif call.data == 'new_order':
         pass
-            
-    
-            
-        
+    elif call.data == 'back':
+        markup = russian()
+        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Вы в главном меню \nКакое действие вы хотите сделать :z", reply_markup=markup)
+    elif call.data == '':
+        ...
+
+
 
 @bot.message_handler(func=lambda message: True)
 def echo_all(message):
