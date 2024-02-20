@@ -4,6 +4,45 @@ from telebot import types
 
 bot = telebot.TeleBot('6956163861:AAHiedP7PYOWS-QHeLSqyhGtJsm5aSkFrE8')
 
+user_data = {}
+
+conn = sqlite3.connect('db.sqlite3', check_same_thread=False)
+cursor = conn.cursor()
+cursor.execute('''CREATE TABLE IF NOT EXISTS workers (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    user_name TEXT,
+                    birthday TEXT,
+                    passport_number_and_series TEXT,
+                    given_date TEXT,
+                    born_date TEXT,
+                    born_place TEXT,
+                    sex TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )''')
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS services (
+                    user_id INTEGER,
+                    service_name TEXT,
+                    service_description TEXT,
+                    service_price REAL,
+                    service_location TEXT
+                )''')
+""" sqlite passport creation code
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS passport (
+        id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        born_date TEXT NOT NULL,
+        born_place TEXT NOT NULL,
+        sex TEXT NOT NULL,
+        passport_number_and_series TEXT NOT NULL,
+        given_date TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES workers (id)
+    )
+''')
+"""
+
 
 @bot.message_handler(commands=['start'])
 def handle_worker_info(message):
