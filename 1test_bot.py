@@ -35,8 +35,7 @@ def callback_query(call):
         markup = my_account_rus()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
     elif call.data == 'change_number':
-        ...
-    elif call.data == 'back':
+        ...    elif call.data == 'back':
         markup = russian()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций:", reply_markup=markup)
 
