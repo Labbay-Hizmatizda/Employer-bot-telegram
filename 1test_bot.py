@@ -58,9 +58,15 @@ def callback_query(call):
     elif call.data == 'back':
         markup = russian()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Вы в главном меню \nКакое действие вы хотите сделать :z", reply_markup=markup)
-    elif call.data == '':
-        ...
 
+
+@bot.message_handler(commands=['login'])
+def log_in(message):
+    ...
+
+@bot.message_handler(commands=['register'])
+def register(message):
+    ...
 
 
 @bot.message_handler(func=lambda message: True)
