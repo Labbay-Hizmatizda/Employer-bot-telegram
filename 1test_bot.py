@@ -21,8 +21,12 @@ def callback_query(call):
     if call.data == 'lang_rus':
         markup = russian()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text='Привет, {0}!'.format(call.from_user.first_name), reply_markup=markup)
-    elif call.data == 'about_us':
-        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="У нас есть охуенный сайт хотите посетить ?\n pornhub.com")
+    elif call.data == 'about_us_rus':
+        markup = types.InlineKeyboardMarkup()
+        back = types.InlineKeyboardButton('Назад', callback_data='back')
+        markup.add(back)
+
+        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="У нас есть охуенный сайт хотите посетить ?\n pornhub.com", reply_markup=markup)
 
 
         '''
@@ -52,7 +56,7 @@ def callback_query(call):
         markup = orders_rus()
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
     elif call.data == 'active_orders':
-        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :", reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="Какую одну из функций :")
     elif call.data == 'new_order':
         pass
     elif call.data == 'back':

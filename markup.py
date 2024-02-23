@@ -37,7 +37,7 @@ def orders_rus():
 
 def active_orders_rus():
     ...
-
+    
 def new_order():
     ...
 
