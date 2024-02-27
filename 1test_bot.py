@@ -1,5 +1,4 @@
 import telebot
-from telebot import types
 from markup import *
 
 bot = telebot.TeleBot('6956163861:AAHiedP7PYOWS-QHeLSqyhGtJsm5aSkFrE8')
@@ -11,6 +10,7 @@ def start(message):
     markup = types.InlineKeyboardMarkup()
     lang_rus = types.InlineKeyboardButton('🇷🇺 Русский', callback_data='lang_rus')
     lang_uz = types.InlineKeyboardButton('🇺🇿 O\'zbek tili', callback_data='lang_uz')
+    # ToDo: Add languages to the database
 
     markup.add(lang_rus, lang_uz)
     bot.send_message(message.chat.id, "Выберите язык 🌐\nTilni tanlang 🌐", reply_markup=markup)
@@ -20,7 +20,7 @@ def start(message):
 def callback_query(call): 
     if call.data == 'lang_rus':
         markup = russian()
-        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text='Привет, {0}!'.format(call.from_user.first_name), reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='Привет, {0}!'.format(call.from_user.first_name), reply_markup=markup)
     elif call.data == 'about_us_rus':
         markup = types.InlineKeyboardMarkup()
         back = types.InlineKeyboardButton('Назад', callback_data='back')
