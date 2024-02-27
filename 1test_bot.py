@@ -2,7 +2,7 @@ import telebot
 from markup import *
 
 bot = telebot.TeleBot('6956163861:AAHiedP7PYOWS-QHeLSqyhGtJsm5aSkFrE8')
-
+user_lang = {}
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -10,7 +10,6 @@ def start(message):
     markup = types.InlineKeyboardMarkup()
     lang_rus = types.InlineKeyboardButton('🇷🇺 Русский', callback_data='lang_rus')
     lang_uz = types.InlineKeyboardButton('🇺🇿 O\'zbek tili', callback_data='lang_uz')
-    # ToDo: Add languages to the database
 
     markup.add(lang_rus, lang_uz)
     bot.send_message(message.chat.id, "Выберите язык 🌐\nTilni tanlang 🌐", reply_markup=markup)
@@ -27,7 +26,6 @@ def callback_query(call):
         markup.add(back)
 
         bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="У нас есть охуенный сайт хотите посетить ?\n pornhub.com", reply_markup=markup)
-
 
         '''
             -Мои данные
@@ -65,11 +63,7 @@ def callback_query(call):
 
 
 @bot.message_handler(commands=['login'])
-def log_in(message):
-    ...
-
-@bot.message_handler(commands=['register'])
-def register(message):
+def log_into(message):
     ...
 
 
