@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+from telebot import types
 
 import telebot
 from markup import *
@@ -31,7 +32,7 @@ def callback_query(call):
         back = types.InlineKeyboardButton('Назад', callback_data='back')
         markup.add(back)
 
-        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="У нас есть охуенный сайт хотите посетить ?\n pornhub.com", reply_markup=markup)
+        bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.id, text="У нас есть сайт хотите посетить ?", reply_markup=markup)
 
         '''
             -Мои данные

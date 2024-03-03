@@ -4,7 +4,7 @@ from telebot import types
 def russian():
     markup = types.InlineKeyboardMarkup()
 
-    about_us = types.InlineKeyboradButton('О нас', callback_data='about_us_rus')
+    about_us = types.InlineKeyboardButton('О нас', callback_data='about_us_rus')
     my_account = types.InlineKeyboardButton('Мои Данные', callback_data='my_account_rus')
     orders = types.InlineKeyboardButton('Заказы', callback_data='orders_rus')
     
